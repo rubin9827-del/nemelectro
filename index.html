@@ -22,7 +22,7 @@
   --mono:"IBM Plex Mono",monospace;--sans:"IBM Plex Sans",sans-serif;
 }
 body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh}
-#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;position:fixed;inset:0;background:var(--bg);z-index:200}
 .auth-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:36px 40px;width:100%;max-width:400px}
 .auth-tabs{display:flex;margin-bottom:24px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
 .auth-tab{flex:1;padding:9px;text-align:center;font-size:12px;font-weight:500;cursor:pointer;background:var(--surface2);color:var(--text2);border:none;font-family:var(--sans);transition:all .15s}
@@ -42,7 +42,7 @@ select.fi{cursor:pointer}
 .msg{border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:14px;display:none}
 .msg-err{background:var(--red-bg);color:var(--red)}
 .msg-ok{background:var(--green-bg);color:var(--green)}
-#app-screen{display:none;height:100vh;overflow:hidden}
+#app-screen{display:none;height:100vh;overflow:hidden;position:relative;z-index:100}
 .layout{display:flex;height:100vh}
 .sidebar{width:210px;flex-shrink:0;background:var(--accent);display:flex;flex-direction:column}
 .sb-logo{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.1)}
@@ -385,12 +385,11 @@ let projFilter = 'all';
 let unsubProjects = null;
 
 // ── AUTH STATE ──
-// Fallback: hide loading after 2 seconds
+// Fallback: hide loading after 3 seconds
 setTimeout(() => {
   const loading = document.getElementById('loading');
   if (loading && loading.style.display !== 'none') {
     hideLoading();
-    // If user is logged in Firebase but we're still loading — force launch
     const u = auth.currentUser;
     if (u) {
       db.collection('users').doc(u.uid).get().then(doc => {
@@ -405,7 +404,7 @@ setTimeout(() => {
       showAuthScreen();
     }
   }
-}, 2000);
+}, 3000);
 
 auth.onAuthStateChanged(async user => {
   if (user) {
